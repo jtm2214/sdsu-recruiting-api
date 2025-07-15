@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Player Bio: {{ name }}</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+    h1 { font-size: 1.5rem; }
+    .summary { margin-top: 1rem; }
+  </style>
+</head>
+<body>
+  <h1>{{ name }} &mdash; {{ school }}</h1>
+  <div class="summary">{{ summary|safe }}</div>
+</body>
+</html>
