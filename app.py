@@ -1,17 +1,31 @@
 import os
 import logging
+
+from flask import Flask, request, render_template, jsonify, redirect, url_for
 import openai
-from flask import Flask, request, render_template, jsonify
 import cloudscraper
 from bs4 import BeautifulSoup
+
 from scraper.recruiting import scrape_recruiting
-from scraper.portal import scrape_transfer_portal
-from utils.sheets import update_recruits_sheet, update_portal_sheet
+from scraper.portal   import scrape_transfer_portal
+from utils.sheets     import update_recruits_sheet, update_portal_sheet
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
+
+# ─── OpenAI setup ─────────────────────────────────────────────────────────────
+
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+# ─── Flask app ───────────────────────────────────────────────────────────────
+
 app = Flask(__name__, template_folder="templates")
+
+
+@app.route("/")  
+def index():  
+    # Simple landing page  
+    return "⚽️ College Football AI‐Bio Service is running", 200  
+
 
 def generate_summary(name: str, school: str) -> str:
     prompt = (
@@ -20,23 +34,28 @@ def generate_summary(name: str, school: str) -> str:
         f"statistics and metrics, and any notable achievements or transfers. "
         f"Format it as a few HTML paragraphs."
     )
-    resp = openai.ChatCompletion.create(
+    resp = openai.chat.completions.create(
         model="gpt-4",
         messages=[
-            {"role":"system", "content":"You are a sports data assistant."},
-            {"role":"user",   "content": prompt}
+            {"role": "system", "content": "You are a sports data assistant."},
+            {"role": "user",   "content": prompt},
         ],
         temperature=0.7,
         max_tokens=400,
     )
     return resp.choices[0].message.content
 
+
 @app.route("/bio")
 def bio():
     name   = request.args.get("name", "")
     school = request.args.get("school", "")
+    if not name or not school:
+        # if someone hits /bio with no params, send them to index
+        return redirect(url_for("index"))
     summary = generate_summary(name, school)
     return render_template("bio.html", name=name, school=school, summary=summary)
+
 
 @app.route("/update/recruits", methods=["POST"])
 def update_recruits():
@@ -52,6 +71,7 @@ def update_recruits():
     logging.info(msg)
     return jsonify(status="ok", message=msg), 200
 
+
 @app.route("/update/portal", methods=["POST"])
 def update_portal():
     entries = scrape_transfer_portal()
@@ -66,9 +86,11 @@ def update_portal():
     logging.info(msg)
     return jsonify(status="ok", message=msg), 200
 
+
 @app.route("/_health")
 def health():
     return "OK", 200
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT",5000))
