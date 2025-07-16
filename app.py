@@ -26,7 +26,7 @@ def generate_summary(name: str, school: str) -> str:
             {"role":"system", "content":"You are a sports data assistant."},
             {"role":"user",   "content": prompt}
         ],
-        temperature=0.3,
+        temperature=0.7,
         max_tokens=400,
     )
     return resp.choices[0].message.content
