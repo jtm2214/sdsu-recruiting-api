@@ -35,7 +35,7 @@ def generate_summary(name: str, school: str) -> str:
         f"Format it as a few HTML paragraphs."
     )
     resp = openai.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o",
         messages=[
             {"role": "system", "content": "You are a sports data assistant."},
             {"role": "user",   "content": prompt},
