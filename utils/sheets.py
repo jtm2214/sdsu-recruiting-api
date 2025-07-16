@@ -6,7 +6,6 @@ import logging
 import urllib.parse
 
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 from gspread.exceptions import APIError
 
 import json
@@ -105,7 +104,7 @@ def update_recruits_sheet(data, sheet_name, worksheet_name="Sheet1"):
     ws = get_worksheet(sheet_name, worksheet_name)
     _retry(ws.clear)
     # <-- USER_ENTERED so formulas are active
-    _retry(ws.update, "A1", rows, {"value_input_option":"USER_ENTERED"})
+    _retry(ws.update, "A1", rows, value_input_option="USER_ENTERED")
     logging.info(f"[sheets] recruited → {len(data)} rows written")
 
 def update_portal_sheet(data, sheet_name, worksheet_name="Sheet1"):

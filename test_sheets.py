@@ -8,7 +8,7 @@ from utils.sheets      import update_recruits_sheet, update_portal_sheet
 
 # Point to your service‐account creds and sheet names
 os.environ["GOOGLE_CREDS_JSON"]   = "creds.json"
-os.environ["GOOGLE_SHEET_NAME"]   = "SDSU Recruiting"
+os.environ["GOOGLE_SHEET_NAME"]   = "SDSU Recruiting 2026"
 os.environ["PORTAL_SHEET_NAME"]   = "SDSU Transfer Portal"
 
 # --- Test recruiting sheet update ---
