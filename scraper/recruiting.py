@@ -10,7 +10,7 @@ def scrape_recruiting(batch_size=5, max_workers=5):
     Scrape ALL recruits, in parallel batches of `batch_size` pages at a time,
     stopping when a page has fewer recruits than page 1.
     """
-    base_url = "https://247sports.com/Season/2025-Football/CompositeRecruitRankings/"
+    base_url = "https://247sports.com/Season/2026-Football/CompositeRecruitRankings/"
     scraper = cloudscraper.create_scraper()
 
     def fetch_page(page):
